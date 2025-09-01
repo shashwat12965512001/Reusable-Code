@@ -142,6 +142,117 @@ vector<int> phi_sieve(int N)
     return phi;
 }
 
+/**
+ * @brief Find the first (leftmost) index of a target value in a sorted array.
+ *
+ * @param array The input sorted array (vector<int>).
+ * @param target The value to search for.
+ * @return int The index of the first occurrence of `target` in `array`,
+ *         or -1 if `target` is not present.
+ *
+ * @note This implementation is a variant of binary search.
+ *       - If multiple occurrences of `target` exist, it returns the smallest index.
+ *       - If `target` does not exist, it returns -1.
+ *
+ * @note Example:
+ *       array = {1, 2, 4, 4, 5}, target = 4 → returns 2
+ *       array = {1, 2, 3, 5, 6}, target = 4 → returns -1
+ *
+ * @note Complexity: O(log N), where N = array.size().
+ */
+int lowerBound(const vector<int> &array, int target)
+{
+    int low = 0, high = array.size() - 1, result = -1;
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+        if (array[mid] == target)
+        {
+            result = mid;
+            high = mid - 1; // keep searching left part for earlier occurrence
+        }
+        else if (array[mid] < target)
+        {
+            low = mid + 1;
+        }
+        else
+        {
+            high = mid - 1;
+        }
+    }
+    return result;
+}
+
+/**
+ * @brief Find the last (rightmost) index of a target value in a sorted array.
+ *
+ * @param array The input sorted array (vector<int>).
+ * @param target The value to search for.
+ * @return int The index of the last occurrence of `target` in `array`,
+ *         or -1 if `target` is not present.
+ *
+ * @note This implementation is a variant of binary search.
+ *       - If multiple occurrences of `target` exist, it returns the largest index.
+ *       - If `target` does not exist, it returns -1.
+ *
+ * @note Example:
+ *       array = {1, 2, 4, 4, 5}, target = 4 → returns 3
+ *       array = {1, 2, 3, 5, 6}, target = 4 → returns -1
+ *
+ * @note Complexity: O(log N), where N = array.size().
+ */
+int upperBound(const vector<int> &array, int target)
+{
+    int low = 0, high = array.size() - 1, result = -1;
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+        if (array[mid] == target)
+        {
+            result = mid;
+            low = mid + 1; // keep searching right part for later occurrence
+        }
+        else if (array[mid] < target)
+        {
+            low = mid + 1;
+        }
+        else
+        {
+            high = mid - 1;
+        }
+    }
+    return result;
+}
+
+/**
+ * @brief Count the total number of occurrences of a target value in a sorted array.
+ *
+ * @param array The input sorted array (vector<int>).
+ * @param target The value to count.
+ * @return int The number of times `target` appears in `array`.
+ *
+ * @note This function internally uses `lowerBound` and `upperBound`:
+ *       - If `target` is not found, returns 0.
+ *       - Otherwise, returns (last_index - first_index + 1).
+ *
+ * @note Example:
+ *       array = {1, 2, 4, 4, 4, 5}, target = 4 → returns 3
+ *       array = {1, 2, 3, 5, 6}, target = 4   → returns 0
+ *
+ * @note Complexity: O(log N), where N = array.size().
+ *       (Each of `lowerBound` and `upperBound` is O(log N))
+ */
+int countOccurences(const vector<int> &array, int target)
+{
+    int first = lowerBound(array, target);
+    if (first == -1)
+    {
+        return 0;
+    }
+    int last = upperBound(array, target);
+    return (last - first + 1);
+}
+
 int main()
 {
     int n = 36;
